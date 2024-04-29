@@ -1,0 +1,60 @@
+<!-- views/book.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= book.title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/epub.js/0.3.89/epub.min.js"></script>
+</head>
+<body>
+  <h1><%= book.title %></h1>
+  <h2>By <%= book.author %></h2>
+  <p><%= book.description %></p>
+  <hr>
+  <ul>
+    <% toc.forEach(item => { %>
+      <li><a href="<%= item.href %>"><%= item.label %></a></li>
+    <% }); %>
+  </ul>
+  <div id="viewer"></div>
+  <script>
+    // Create a book object from the EPUB file
+    const book = ePub("/uploads/<%= book.file_name %>");
+
+    // Render the book to the specified element with a given size
+    const rendition = book.renderTo("viewer", { width: "100%", height: "100%" });
+
+    // Display the initial page
+    rendition.display();
+
+    // Handle resizing of the viewport
+    window.addEventListener("resize", () => {
+      rendition.resize();
+    });
+
+    // Go to the specified location in the book (e.g., when clicking on a TOC item)
+    const goTo = (href) => {
+      rendition.display(href);
+    };
+
+    // Bind the goTo function to all links in the TOC
+    const tocLinks = document.querySelectorAll("#toc a");
+    tocLinks.forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        goTo(link.getAttribute("href"));
+      });
+    });
+
+    // Handle key presses for navigation (left and right arrow keys)
+    document.addEventListener("keydown", (e) => {
+      if (e.keyCode === 37) { // Left arrow
+        rendition.prev();
+      } else if (e.keyCode === 39) { // Right arrow
+        rendition.next();
+      }
+    });
+  </script>
+</body>
+</html>
