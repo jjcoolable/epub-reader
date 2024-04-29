@@ -1,11 +1,23 @@
+<!-- views/index.ejs -->
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EPUB Library</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <h1>EPUB Library</h1>
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    <input type="file" name="epubFile" accept=".epub" required>
+    <button type="submit">Upload EPUB</button>
+  </form>
+  <ul>
+    <% books.forEach(book => { %>
+      <li>
+        <a href="/book/<%= book.id %>"><%= book.title %></a> by <%= book.author %>
+      </li>
+    <% }); %>
+  </ul>
+</body>
 </html>
