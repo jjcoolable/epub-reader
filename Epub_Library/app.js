@@ -83,7 +83,24 @@ app.post('/upload', upload.single('epubFile'), async (req, res) => {
   }
 });
 
-// View book route
+// Server-side route handler for rendering the book view
+app.get('/book/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Fetch book information from the database based on the ID
+    const [rows] = await pool.query('SELECT * FROM books WHERE id = ?', [id]);
+    if (rows.length === 0) {
+      return res.status(404).send('Book not found');
+    }
+
+    // Render the book view template and pass book information
+    res.render('book', { book: rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+/* // View book route
 app.get('/book/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -108,4 +125,4 @@ app.get('/book/:id', async (req, res) => {
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-});
+}); */
