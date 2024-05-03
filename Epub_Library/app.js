@@ -17,15 +17,21 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Multer configuration for file upload
-const upload = multer({
-  dest: 'uploads/',
-  fileFilter: (req, file, cb) => {
-    if (!file.originalname.match(/\.(epub)$/)) {
-      return cb(new Error('Please upload an EPUB file'));
-    }
-    cb(null, true);
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
   },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); // Use the original filename
+  }
 });
+
+const upload = multer({ storage: storage, fileFilter: (req, file, cb) => {
+  if (!file.originalname.match(/\.(epub)$/)) {
+    return cb(new Error('Please upload an EPUB file'));
+  }
+  cb(null, true);
+}});
 
 // Home route
 app.get('/', async (req, res) => {
@@ -86,7 +92,7 @@ app.get('/book/:id', async (req, res) => {
       return res.status(404).send('Book not found');
     }
     
-    const book = ePub();
+    const book = new ePub.Book();
     const epubData = await fs.readFile(`uploads/${rows[0].file_name}`);
     await book.open(epubData);
     const toc = await book.getToc();
