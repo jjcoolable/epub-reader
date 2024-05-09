@@ -1,8 +1,7 @@
     // Client-side JavaScript for rendering EPUB books using epubjs
-window.onload = function() {
-    // Code to initialize epubjs and render EPUB books 
-    // Create a book object from the EPUB file
-    const book = ePub("/uploads/<%= book.file_name %>");
+    window.onload = function() {
+        // Use the EPUB file name passed from the server-side
+        const book = ePub("/uploads/" + bookFileName);
 
     // Render the book to the specified element with a given size
     const rendition = book.renderTo("viewer", { width: "100%", height: "100%" });

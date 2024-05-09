@@ -120,9 +120,9 @@ app.get('/book/:id', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
-
+*/
 // Start the server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-}); */
+}); 

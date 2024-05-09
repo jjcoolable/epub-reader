@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Include necessary CSS and JavaScript files -->
+  <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+</head>
+<body>
+  <!-- HTML elements for rendering the EPUB book -->
+  <div id="viewer"></div>
+  <div id="toc"></div>
+
+  <!-- Pass EPUB file name from server-side to client-side -->
+  <script>
+    const bookFileName = '<%= book.file_name %>';
+  </script>
+
+  <!-- Include book.js script -->
+  <script src="/javascripts/book.js"></script>
+</body>
+</html>
